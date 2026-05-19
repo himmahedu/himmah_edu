@@ -59,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
         final role = userDoc.get('role') ?? 'student';
         final disabled = userDoc.get('disabled') ?? false;
 
+        print('=== DEBUG ===');
         print('Role: $role');
         print('Specialty: ${userDoc.get('specialty')}');
         print('Year: ${userDoc.get('year')}');
@@ -86,25 +87,38 @@ class _LoginPageState extends State<LoginPage> {
 
         Widget destination;
         if (role == 'student') {
-  final specialty = userDoc.get('specialty') ?? '';
-  final year = userDoc.get('year') ?? '';
-  if (specialty.isEmpty || year.isEmpty) {
-    destination = const SetupProfilePage();
-  } else {
-    destination = StudentHomePage(specialty: specialty, year: year);
-  }
-} else if (role == 'teacher') {
+          final specialty = userDoc.get('specialty') ?? '';
+          final year = userDoc.get('year') ?? '';
+          if (specialty.isEmpty || year.isEmpty) {
+            destination = const SetupProfilePage();
+          } else {
+            destination = StudentHomePage(specialty: specialty, year: year);
+          }
+        } else if (role == 'teacher') {
           destination = TeacherDashboardPage(teacherId: user.uid);
         } else {
           destination = const AdminDashboardPage();
         }
 
+        print('Destination: ${destination.runtimeType}');
+
         if (mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => destination),
-            (route) => false,
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('جاري الانتقال إلى ${destination.runtimeType}... الدور: $role'),
+              duration: const Duration(seconds: 2),
+            ),
           );
+
+          await Future.delayed(const Duration(seconds: 1));
+
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => destination),
+              (route) => false,
+            );
+          }
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -230,3 +244,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+//ubjhmguyjb  
+
+
+
+//oihnkj,nohn
+
+
+
