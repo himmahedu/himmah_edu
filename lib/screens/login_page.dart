@@ -32,9 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         final user = uc.user!;
         final userDoc = await _authService.getUserData(user.uid);
 
-        // التحقق من وجود بيانات المستخدم
         if (!userDoc.exists) {
-          // إنشاء مستند افتراضي للطالب إذا لم يكن موجوداً
           await FirebaseFirestore.instance
               .collection('users')
               .doc(user.uid)
@@ -50,8 +48,7 @@ class _LoginPageState extends State<LoginPage> {
           });
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(
-                  'تم إنشاء بياناتك. الرجاء تسجيل الدخول مجدداً.')),
+              const SnackBar(content: Text('تم إنشاء بياناتك. الرجاء تسجيل الدخول مجدداً.')),
             );
           }
           setState(() => _loading = false);
@@ -60,6 +57,10 @@ class _LoginPageState extends State<LoginPage> {
 
         final role = userDoc.get('role') ?? 'student';
         final disabled = userDoc.get('disabled') ?? false;
+
+        print('Role: $role');
+        print('Specialty: ${userDoc.get('specialty')}');
+        print('Year: ${userDoc.get('year')}');
 
         if (disabled == true) {
           if (mounted) {
@@ -75,8 +76,7 @@ class _LoginPageState extends State<LoginPage> {
           await user.sendEmailVerification();
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(
-                  'الرجاء تفعيل بريدك الإلكتروني. تم إرسال رابط التفعيل.')),
+              const SnackBar(content: Text('الرجاء تفعيل بريدك الإلكتروني. تم إرسال رابط التفعيل.')),
             );
           }
           setState(() => _loading = false);
@@ -95,8 +95,11 @@ class _LoginPageState extends State<LoginPage> {
         }
 
         if (mounted) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => destination));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => destination),
+            (route) => false,
+          );
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -104,8 +107,7 @@ class _LoginPageState extends State<LoginPage> {
       if (e.code == 'user-not-found') msg = 'المستخدم غير موجود';
       if (e.code == 'wrong-password') msg = 'كلمة المرور خاطئة';
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       }
     }
     setState(() => _loading = false);
@@ -135,17 +137,13 @@ class _LoginPageState extends State<LoginPage> {
                       radius: 50,
                       backgroundColor: Colors.white,
                       child: ClipOval(
-                        child: Image.asset('assets/images/logo.png', width: 80,
-                            height: 80,
-                            fit: BoxFit.contain),
+                        child: Image.asset('assets/images/logo.png', width: 80, height: 80, fit: BoxFit.contain),
                       ),
                     ),
                     const SizedBox(height: 20),
                     const Text(
                       'أكاديمية همة التعليمية',
-                      style: TextStyle(fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                      style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                     const SizedBox(height: 40),
                     Container(
@@ -153,8 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: Colors.white.withOpacity(
-                            0.3)),
+                        border: Border.all(color: Colors.white.withOpacity(0.3)),
                       ),
                       child: Column(
                         children: [
@@ -163,20 +160,10 @@ class _LoginPageState extends State<LoginPage> {
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               labelText: 'البريد الإلكتروني',
-                              labelStyle: const TextStyle(
-                                  color: Colors.white70),
-                              prefixIcon: const Icon(
-                                  Icons.email, color: Color(0xFFFFDE59)),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                    color: Colors.white.withOpacity(0.5)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Color(0xFFFFDE59), width: 2),
-                              ),
+                              labelStyle: const TextStyle(color: Colors.white70),
+                              prefixIcon: const Icon(Icons.email, color: Color(0xFFFFDE59)),
+                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withOpacity(0.5))),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFFFDE59), width: 2)),
                             ),
                             validator: (v) => v!.isEmpty ? 'مطلوب' : null,
                           ),
@@ -187,20 +174,10 @@ class _LoginPageState extends State<LoginPage> {
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               labelText: 'كلمة المرور',
-                              labelStyle: const TextStyle(
-                                  color: Colors.white70),
-                              prefixIcon: const Icon(
-                                  Icons.lock, color: Color(0xFFFFDE59)),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                    color: Colors.white.withOpacity(0.5)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Color(0xFFFFDE59), width: 2),
-                              ),
+                              labelStyle: const TextStyle(color: Colors.white70),
+                              prefixIcon: const Icon(Icons.lock, color: Color(0xFFFFDE59)),
+                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withOpacity(0.5))),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFFFDE59), width: 2)),
                             ),
                             validator: (v) => v!.isEmpty ? 'مطلوب' : null,
                           ),
@@ -211,19 +188,13 @@ class _LoginPageState extends State<LoginPage> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFFDE59),
                                 foregroundColor: Colors.black87,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
                               ),
                               onPressed: _loading ? null : _login,
                               child: _loading
-                                  ? const SizedBox(height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                      color: Colors.black))
-                                  : const Text('دخول', style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.black))
+                                  : const Text('دخول', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                             ),
                           ),
                         ],
@@ -234,19 +205,13 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                          onPressed: () =>
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (_) => const RegisterPage())),
-                          child: const Text('ليس لديك حساب؟ سجل الآن',
-                              style: TextStyle(color: Colors.white)),
+                          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RegisterPage())),
+                          child: const Text('ليس لديك حساب؟ سجل الآن', style: TextStyle(color: Colors.white)),
                         ),
                         const SizedBox(width: 20),
                         TextButton(
-                          onPressed: () =>
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (_) => const ForgotPasswordPage())),
-                          child: const Text('نسيت كلمة السر',
-                              style: TextStyle(color: Colors.white)),
+                          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForgotPasswordPage())),
+                          child: const Text('نسيت كلمة السر', style: TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),
