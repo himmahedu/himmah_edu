@@ -7,6 +7,7 @@ import 'package:himmah_app/screens/forgot_password_page.dart';
 import 'package:himmah_app/screens/student_home_page.dart';
 import 'package:himmah_app/screens/teacher_dashboard_page.dart';
 import 'package:himmah_app/screens/admin_dashboard_page.dart';
+import 'package:himmah_app/screens/setup_profile_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -85,10 +86,14 @@ class _LoginPageState extends State<LoginPage> {
 
         Widget destination;
         if (role == 'student') {
-          final specialty = userDoc.get('specialty') ?? '';
-          final year = userDoc.get('year') ?? '';
-          destination = StudentHomePage(specialty: specialty, year: year);
-        } else if (role == 'teacher') {
+  final specialty = userDoc.get('specialty') ?? '';
+  final year = userDoc.get('year') ?? '';
+  if (specialty.isEmpty || year.isEmpty) {
+    destination = const SetupProfilePage();
+  } else {
+    destination = StudentHomePage(specialty: specialty, year: year);
+  }
+} else if (role == 'teacher') {
           destination = TeacherDashboardPage(teacherId: user.uid);
         } else {
           destination = const AdminDashboardPage();
