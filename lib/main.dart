@@ -10,7 +10,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -53,9 +52,7 @@ class MyApp extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           ),
         ),
-        drawerTheme: DrawerThemeData(
-          backgroundColor: const Color(0xFFFDF9E6),
-        ),
+        drawerTheme: DrawerThemeData(backgroundColor: const Color(0xFFFDF9E6)),
         colorScheme: const ColorScheme.light(
           primary: Color(0xFFFF3131),
           secondary: Color(0xFFFF8C00),
@@ -87,9 +84,7 @@ class MyApp extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           ),
         ),
-        drawerTheme: const DrawerThemeData(
-          backgroundColor: Color(0xFF1E1E1E),
-        ),
+        drawerTheme: const DrawerThemeData(backgroundColor: Color(0xFF1E1E1E)),
         colorScheme: const ColorScheme.dark(
           primary: Color(0xFFFF3131),
           secondary: Color(0xFFFF8C00),
