@@ -8,7 +8,7 @@ class DefaultFirebaseOptions {
       projectId: "academic-app-df2aa",
       storageBucket: "academic-app-df2aa.firebasestorage.app",
       messagingSenderId: "456340205901",
-      appId: "1:456340205901:web:8406277e822f281d1c0704",
+      appId: "1:456340205901:android:1f61420944b290d81c0704",
     );
   }
 }
